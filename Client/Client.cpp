@@ -1,4 +1,4 @@
-#include <socket.hpp>
+#include <sockethelper.hpp>
 
 SOCKET connection;
 std::string name = "";

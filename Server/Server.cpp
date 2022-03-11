@@ -1,4 +1,4 @@
-#include <socket.hpp>
+#include <sockethelper.hpp>
 
 const int MAX_CONN = 100;
 SOCKET connections[MAX_CONN];
@@ -27,7 +27,6 @@ void ClientHandler(int index){
         if(msg == "/exit"){
             SendAllBut(usernames[index] + " left the chat.",index);
             closesocket(connections[index]);
-            // WSACleanup();
 
             for(int i = index; i < cc-1; i++){
                 connections[i] = connections[i+1];
@@ -54,20 +53,20 @@ int main(){
     listen(sListen,SOMAXCONN);
 
     std::string msg;
-    print("---------------- TestChat ----------------\n");
+    print("---------------- CppChat ----------------\n");
     for(int i=0; i < MAX_CONN; i++){
         connections[cc] = accept(sListen,(SOCKADDR*)&addr,&sizeofaddr);
         if(connections[cc] == 0){
             std::cout<<"Error #2\n";
         } else {
-            SK::Send(connections[cc],"---------------- TestChat ----------------\nEnter your name\n");
+            SK::Send(connections[cc],"---------------- CppChat ----------------\nType /exit to exit chat\nEnter your name\n");
             usernames[cc] = SK::Recv(connections[cc]);
             CreateThread(NULL,NULL,(LPTHREAD_START_ROUTINE)ClientHandler,(LPVOID)(cc),NULL,NULL);
             cc++;
             SendAll(usernames[cc-1] + " joined chat.");
             print("Number of connections = ",cc);
         }
-    }    
+    }
 
     return 0;
 }
